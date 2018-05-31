@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 
 set (CMAKE_CXX_STANDARD 11)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 option(BENCHMARK_ENABLE_TESTING "Enable testing of the benchmark library." OFF)
 if(NOT WIN32)
@@ -32,17 +33,22 @@ function(build_eigen_bench VERSION NAME)
   set(EIGEN_DIR ${CMAKE_CURRENT_BINARY_DIR}/eigen-${NAME})
   configure_file(bench.in.cpp ${CMAKE_CURRENT_BINARY_DIR}/bench_${NAME}.cpp)
   add_executable(bench_${NAME} ${CMAKE_CURRENT_BINARY_DIR}/bench_${NAME}.cpp)
+  set_target_properties(bench_${NAME} PROPERTIES FOLDER "Executables")
   target_include_directories(bench_${NAME} SYSTEM PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/eigen-${NAME})
   target_link_libraries(bench_${NAME} benchmark)
   if(NOT WIN32)
     target_link_libraries(bench_${NAME} pthread)
   endif()
-  add_custom_command(TARGET run_benchmark
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/FORCE_BENCH.rule
     COMMAND bench_${NAME}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR} ${APPEND_BENCHMARK})
+  if(NOT DEFINED APPEND_BENCHMARK)
+    set(APPEND_BENCHMARK APPEND PARENT_SCOPE)
+  endif()
+
 endfunction()
 
-add_custom_target(run_benchmark)
+add_custom_target(run_benchmark DEPENDS OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/FORCE_BENCH.rule)
 
 build_eigen_bench(3.2.8 3_2_8)
 build_eigen_bench(3.2.10 3_2_10)
