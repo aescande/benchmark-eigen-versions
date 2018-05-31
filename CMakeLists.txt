@@ -48,7 +48,7 @@ function(build_eigen_bench VERSION NAME)
 
 endfunction()
 
-add_custom_target(run_benchmark DEPENDS OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/FORCE_BENCH.rule)
+add_custom_target(run_benchmark DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/FORCE_BENCH.rule)
 
 build_eigen_bench(3.2.8 3_2_8)
 build_eigen_bench(3.2.10 3_2_10)
