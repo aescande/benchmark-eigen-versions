@@ -34,4 +34,20 @@ static void BM_@NAME@_LazyProduct(benchmark::State & state)
 }
 BENCHMARK(BM_@NAME@_LazyProduct);
 
+static void BM_@NAME@_GroupProduct(benchmark::State & state)
+{
+  Eigen::MatrixXd T = Eigen::MatrixXd::Random(30, 40);
+  Eigen::VectorXd u = Eigen::VectorXd::Random(30);
+  Eigen::Matrix<double,1,Eigen::Dynamic> v = Eigen::Matrix<double, 1, Eigen::Dynamic>::Random(40);
+  double t = 0.3;
+
+  double d = 0;
+  for(auto _ : state)
+  {
+    T.noalias() -= (t*u) * v;
+    d = T.data()[0];
+  }
+}
+BENCHMARK(BM_@NAME@_GroupProduct);
+
 BENCHMARK_MAIN()
