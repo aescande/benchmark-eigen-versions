@@ -65,6 +65,6 @@ static void BM_@NAME@_SeparatedProduct(benchmark::State & state)
     d = T.data()[0];
   }
 }
-BENCHMARK(BM_@NAME@_SeperatedProduct);
+BENCHMARK(BM_@NAME@_SeparatedProduct);
 
 BENCHMARK_MAIN()
